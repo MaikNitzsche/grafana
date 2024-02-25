@@ -1,0 +1,23 @@
+version: '3'
+services:
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - type: bind
+        source: "/mnt/c/AZ_DATEN/OMS/Workspace/IntelliJ/Monitoring/grafana/docker/datasources.yaml"
+        target: "/etc/grafana/provisioning/datasources/datasources.yaml"
+        read_only: true
+    environment:
+      - GF_SECURITY_ADMIN_USER=wsl_admin
+      - GF_SECURITY_ADMIN_PASSWORD=wsl_admin
+      - HTTP_PROXY=http://de001-surf.zone2.proxy.allianz:8080/
+      - HTTPS_PROXY=http://de001-surf.zone2.proxy.allianz:8080/
+      - NO_PROXY=localhost,127.0.0.1,*.uranus,10.0.0.0/8,*.allianz,192.168.0.0/16,172.0.0.0/8,wsl2host
+    network_mode: bridge
+volumes:
+  grafana_data:
